@@ -31,8 +31,9 @@
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
            // var clientId = '792240200829885';
-            var clientId = '831834096870495';
-            var url = 'https://www.facebook.com/dialog/oauth?display=popup&client_id=' + clientId + '&redirect_uri=' + encodeURIComponent('http://oauthtest.dev/return.php');
+            var clientId = '816875785032993';
+            var redirectUri = 'http://oauthtest.dev/return.php';
+            var url = 'https://www.facebook.com/dialog/oauth?display=popup&client_id=' + clientId + '&redirect_uri=' + encodeURIComponent(redirectUri);
             var restBaseUrl = 'http://localhost:4390/app_dev.php/api/v1';
             //var url = 'https://www.facebook.com/dialog/oauth?client_id=' + clientId + '&redirect_uri=' + encodeURIComponent('https://www.facebook.com/connect/login_success.html');
 
@@ -59,6 +60,7 @@
                     if (path == '/return.php') {
                         console.log('Path with code: ' + path);
                         console.log(qs);
+                        console.log(''+win.location);
                         win.close();
 
                         win = null;
@@ -74,11 +76,12 @@
                 };
 
                 var requestAuth = function (code) {
-                    $.ajax('http://192.168.1.206:4390/app_dev.php/api/v1/oauth_requests', {
-                        data: {providerName: 'facebook', code: code},
+                    $.ajax('http://schat.dev/app_dev.php/api/v1/oauth_requests', {
+                        data: {provider_name: 'facebook', code: code, redirect_uri: redirectUri},
                         type: 'POST',
-                        timeout: 30,
+                        timeout: 30000,
                         dataType: 'json',
+                        crossDomain: true,
                         success: function (res) {
                             console.log(res);
                         }
