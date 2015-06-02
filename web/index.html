@@ -23,8 +23,33 @@
         <p>Hello world! This is HTML5 Boilerplate.</p>
         <a href="#" id="fbLogin">Log In</a>
 
+        <p>
+
+            Token: <input type="text" name="token" id="token" /><br/>
+
+            User ID: <input type="text" name="userId" id="userId" /><br/>
+
+        Add User Photo
+        <form action="" method="post" id="userPhotoForm" enctype="multipart/form-data">
+            <input type="text" name="discriminator"/><br/>
+            <input type="file" name="file[file]"/>
+            <input type="submit"/>
+        </form>
+        <br/><br/>
+
+        Add Image Message <br/>
+        Chat ID: <input type="text" name="chatId" id="chatId" /><br/>
+
+        <form action="" method="post" id="imageMessageForm" enctype="multipart/form-data">
+            Discriminator: <input type="text" name="discriminator" value="image"/><br/>
+            Image: <input type="file" name="imageFile[file]"/>
+            <input type="submit"/>
+        </form>
+        </p>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+        <script src="js/vendor/jquery.form.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 
@@ -84,6 +109,9 @@
                         crossDomain: true,
                         success: function (res) {
                             console.log(res);
+                            if (res.token) {
+                                $('#token').val(res.token);
+                            }
                         }
                     });
                 };
@@ -97,6 +125,30 @@
                     ev.preventDefault();
                     fbLogin();
                 });
+
+                 $('#userPhotoForm').on('submit', function (ev) {
+                     ev.preventDefault();
+
+                     var form = $(this),
+                         userId = $('#userId').val(),
+                         token = $('#token').val();
+
+                     form.ajaxSubmit({
+                         url: 'http://schat.dev/app_dev.php/api/v1/users/' + userId + '/photos?_token=' + encodeURIComponent(token),
+                     });
+                 });
+
+                $('#imageMessageForm').on('submit', function (ev) {
+                     ev.preventDefault();
+
+                     var form = $(this),
+                         chatId = $('#chatId').val(),
+                         token = $('#token').val();
+
+                     form.ajaxSubmit({
+                         url: 'http://schat.dev/app_dev.php/api/v1/chats/' + chatId + '/messages?_token=' + encodeURIComponent(token),
+                     });
+                 });
             });
         </script>
     </body>
